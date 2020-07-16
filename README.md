@@ -1,7 +1,7 @@
 ### Setup
 - Make conda environment
-         - conda create -n igibson python=3.6 anaconda
-conda activate igibson
+  - conda create -n igibson python=3.6 anaconda
+  - conda activate igibson
 - Install Cuda 10.0
 Extra install information if needed
 https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html
