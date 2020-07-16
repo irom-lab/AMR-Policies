@@ -32,7 +32,7 @@
   - pip install -e .
 - Verify training works w/o errors
   - cd iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1
-  - ./train_single_env.sh
+  - ./train_shell.sh
 
 ### Training Info
 - To play with training set up..file just updated: iGibson/examples/demo/env_interactive_example.py
