@@ -46,7 +46,7 @@
     - Sensors
     - Etc
 - Files I have made edits to:
-  - iGibson/gibson2/agents/tf_agents/environments/suite_gbson.py
+  - iGibson/gibson2/agents/tf_agents/environments/suite_gibson.py
     - To create my own env_type ‘gibson_meg’ for more flexibility with randomness of initial and target positions
 - iGibson/gibson2/envs/locomotor_env.py
   - Two new classes 
