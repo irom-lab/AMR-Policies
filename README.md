@@ -35,6 +35,8 @@
   - ./train_single_env.sh
 
 ### Training Info
+- To play with training set up..file just updated: iGibson/examples/demo/env_interactive_example.py
+  - should see robot init in doorway and objects placed in hallway for scene Placida
 - ./train_shell.sh to set some high level flags
   - Flags are defined in train_eval_rnn_m_reinforce.py along with training code
 - Robot config file is located in iGibson/examples/configs as turtlebot_AMR.yaml
