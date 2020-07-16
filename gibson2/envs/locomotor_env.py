@@ -22,7 +22,6 @@ class NavigateEnv(BaseEnv):
     """
     We define navigation environments following Anderson, Peter, et al. 'On evaluation of embodied navigation agents.'
     arXiv preprint arXiv:1807.06757 (2018). (https://arxiv.org/pdf/1807.06757.pdf)
-
     """
     def __init__(
             self,
@@ -50,7 +49,8 @@ class NavigateEnv(BaseEnv):
                                           action_timestep=action_timestep,
                                           physics_timestep=physics_timestep,
                                           device_idx=device_idx,
-                                          render_to_tensor=render_to_tensor)
+                                          render_to_tensor=render_to_tensor
+                                          )
         self.automatic_reset = automatic_reset
 
     def load_task_setup(self):
@@ -60,6 +60,7 @@ class NavigateEnv(BaseEnv):
         # initial and target pose
         self.initial_pos = np.array(self.config.get('initial_pos', [0, 0, 0]))
         self.initial_orn = np.array(self.config.get('initial_orn', [0, 0, 0]))
+
         self.target_pos = np.array(self.config.get('target_pos', [5, 5, 0]))
         self.target_orn = np.array(self.config.get('target_orn', [0, 0, 0]))
 
@@ -574,7 +575,7 @@ class NavigateEnv(BaseEnv):
         Reset the robot's joint configuration and base pose until no collision
         """
         reset_success = False
-        max_trials = 100
+        max_trials = 500
         for _ in range(max_trials):
             self.reset_initial_and_target_pos()
             if self.test_valid_position('robot', self.robots[0], self.initial_pos, self.initial_orn) and \
@@ -780,6 +781,251 @@ class NavigateRandomEnv(NavigateEnv):
         state = super(NavigateRandomEnv, self).reset()
         return state
 
+class NavigateRandomInitEnv(NavigateEnv):
+    def __init__(
+            self,
+            config_file,
+            model_id=None,
+            mode='headless',
+            action_timestep=1 / 10.0,
+            physics_timestep=1 / 240.0,
+            automatic_reset=False,
+            random_height=False,
+            device_idx=0,
+            render_to_tensor=False,
+            random_init_m=False,
+            idx=0
+    ):
+        """ (e.g., numpy),
+        :param config_file: config_file path
+        :param model_id: override model_id in config file
+        :param mode: headless or gui mode
+        :param action_timestep: environment executes action per action_timestep second
+        :param physics_timestep: physics timestep for pybullet
+        :param automatic_reset: whether to automatic reset after an episode finishes
+        :param random_height: whether to randomize height for target position (for reaching task)
+        :param device_idx: device_idx: which GPU to run the simulation and rendering on
+        """
+        super(NavigateRandomInitEnv, self).__init__(config_file,
+                                                model_id=model_id,
+                                                mode=mode,
+                                                action_timestep=action_timestep,
+                                                physics_timestep=physics_timestep,
+                                                automatic_reset=automatic_reset,
+                                                device_idx=device_idx,
+                                                render_to_tensor=render_to_tensor)
+        self.random_height = random_height
+
+        self.target_dist_min = self.config.get('target_dist_min', 1.0)
+        self.target_dist_max = self.config.get('target_dist_max', 7.0)
+        self.random_init_m = random_init_m
+        self.idx = idx
+
+
+    def reset_initial_and_target_pos(self):
+        """
+        Reset initial_pos, initial_orn and target_pos through randomization
+        The geodesic distance (or L2 distance if traversable map graph is not built)
+        between initial_pos and target_pos has to be between [self.target_dist_min, self.target_dist_max]
+        """
+        if self.random_init_m is 1:
+            _, self.initial_pos = self.scene.get_random_point_floor(self.floor_num, self.random_height)
+
+            max_trials = 500
+            dist = 0.0
+            for _ in range(max_trials):
+                # _, self.target_pos = self.scene.get_random_point_floor(self.floor_num, self.random_height)
+                if self.scene.build_graph:
+                    _, dist = self.get_shortest_path(from_initial_pos=True)
+                else:
+                    dist = l2_distance(self.initial_pos, self.target_pos)
+                if self.target_dist_min < dist < self.target_dist_max:
+                    break
+            if not (self.target_dist_min < dist < self.target_dist_max):
+                print("WARNING: Failed to sample initial and target positions")
+            self.initial_orn = np.array([0, 0, np.random.uniform(0, np.pi * 2)])
+        # else:
+        #     self.initial_pos = self.pos_list[self.idx]
+        #     self.initial_orn = np.array([0., 0., np.pi/2])#np.array([0, 0, np.random.uniform(0, np.pi * 2)])
+        # print(self.initial_pos)
+        # print(self.initial_orn)
+
+    def reset(self, pos_idx=0):
+        """
+        Reset episode
+        """
+        self.idx = pos_idx
+        # self.floor_num = self.scene.get_random_floor()
+        #
+        # if self.scene.is_interactive:
+        #     # reset scene objects
+        #     self.scene.reset_scene_objects()
+        # else:
+        #     # reset "virtual floor" to the correct height
+        #     self.scene.reset_floor(floor=self.floor_num, additional_elevation=0.02)
+        #
+        # state = super(NavigateRandomInitEnv, self).reset()
+        # return state
+
+class NavigateRandomInitEnvSim2Real(NavigateRandomInitEnv):
+    def __init__(self,
+                 config_file,
+                 model_id=None,
+                 mode='headless',
+                 action_timestep=1 / 10.0,
+                 physics_timestep=1 / 240.0,
+                 device_idx=0,
+                 render_to_tensor=False,
+                 automatic_reset=False,
+                 collision_reward_weight=0.0,
+                 track='static',
+                 random_init_m=0,
+                 idx=0,
+                 seed=0
+                 ):
+        super(NavigateRandomInitEnvSim2Real, self).__init__(config_file,
+                                                        model_id=model_id,
+                                                        mode=mode,
+                                                        action_timestep=action_timestep,
+                                                        physics_timestep=physics_timestep,
+                                                        automatic_reset=automatic_reset,
+                                                        random_height=False,
+                                                        device_idx=device_idx,
+                                                        render_to_tensor=render_to_tensor,
+                                                        random_init_m=random_init_m,
+                                                        idx=idx)
+        self.collision_reward_weight = collision_reward_weight
+        np.random.seed(seed)
+
+        assert track in ['static', 'interactive', 'dynamic'], 'unknown track'
+        self.track = track
+
+        if self.track == 'interactive':
+            self.interactive_objects_num_dups = 1
+            self.interactive_objects = self.load_interactive_objects()
+            # does not penalize collision with these interactive objects
+            self.collision_ignore_body_b_ids |= set([obj.body_id for obj in self.interactive_objects])
+        elif self.track == 'dynamic':
+            self.num_dynamic_objects = 1
+            self.dynamic_objects = []
+            self.dynamic_objects_last_actions = []
+            for _ in range(self.num_dynamic_objects):
+                robot = Turtlebot(self.config)
+                self.simulator.import_robot(robot)
+                self.dynamic_objects.append(robot)
+                self.dynamic_objects_last_actions.append(robot.action_space.sample())
+
+            # dynamic objects will repeat their actions for 10 action timesteps
+            self.dynamic_objects_action_repeat = 10
+
+    def load_interactive_objects(self):
+        """
+        Load interactive objects
+        :return: a list of interactive objects
+        """
+        interactive_objects = []
+        interactive_objects_path = [
+            'object_2eZY2JqYPQE.urdf',
+            'object_lGzQi2Pk5uC.urdf',
+            'object_ZU6u5fvE8Z1.urdf',
+            'object_H3ygj6efM8V.urdf',
+            'object_RcqC01G24pR.urdf'
+        ]
+
+        for _ in range(self.interactive_objects_num_dups):
+            for urdf_model in interactive_objects_path:
+                obj = InteractiveObj(os.path.join(gibson2.assets_path, 'models/sample_urdfs', urdf_model))
+                self.simulator.import_object(obj)
+                interactive_objects.append(obj)
+        return interactive_objects
+
+    def reset_interactive_objects(self):
+        """
+        Reset the poses of interactive objects to have no collisions with the scene mesh
+        """
+        sample_x = np.linspace(-2, 5, 10000)
+        sample_y = np.linspace(2.6, 3.5, 100)
+        max_trials = 100
+        for obj in self.interactive_objects:
+            reset_success = False
+            for _ in range(max_trials):
+                # _, pos = self.scene.get_random_point_floor(self.floor_num, self.random_height)
+
+                pos = [np.random.choice(sample_x), np.random.choice(sample_y), 0.]
+                orn = np.array([0, 0, np.random.uniform(0, np.pi * 2)])
+                if self.test_valid_position('obj', obj, pos, orn):
+                    reset_success = True
+                    break
+
+            if not reset_success:
+                print("WARNING: Failed to reset interactive obj without collision")
+
+            self.land('obj', obj, pos, orn)
+
+    def reset_dynamic_objects(self):
+        """
+        Reset the poses of dynamic objects to have no collisions with the scene mesh
+        """
+        max_trials = 100
+        shortest_path, _ = self.get_shortest_path(entire_path=True)
+        floor_height = 0.0 if self.floor_num is None else self.scene.get_floor_height(self.floor_num)
+        for robot in self.dynamic_objects:
+            reset_success = False
+            for _ in range(max_trials):
+                pos = shortest_path[np.random.choice(shortest_path.shape[0])]
+                pos = np.array([pos[0], pos[1], floor_height])
+                orn = np.array([0, 0, np.random.uniform(0, np.pi * 2)])
+                if self.test_valid_position('robot', robot, pos, orn):
+                    reset_success = True
+                    break
+
+            if not reset_success:
+                print("WARNING: Failed to reset dynamic obj without collision")
+
+            self.land('robot', robot, pos, orn)
+
+    def step_dynamic_objects(self):
+        """
+        Apply actions to dynamic objects (default: temporally extended random walk)
+        """
+        if self.current_step % self.dynamic_objects_action_repeat == 0:
+            self.dynamic_objects_last_actions = [robot.action_space.sample() for robot in self.dynamic_objects]
+        for robot, action in zip(self.dynamic_objects, self.dynamic_objects_last_actions):
+            robot.apply_action(action)
+
+    def step(self, action):
+        """
+        Step dynamic objects as well
+        """
+        if self.track == 'dynamic':
+            self.step_dynamic_objects()
+
+        return super(NavigateRandomInitEnvSim2Real, self).step(action)
+
+    def reset(self, pos_idx=0):
+        """
+        Reset episode
+        """
+        self.floor_num = self.scene.get_random_floor()
+
+        if self.scene.is_interactive:
+            # reset scene objects
+            self.scene.reset_scene_objects()
+        else:
+            # reset "virtual floor" to the correct height
+            self.scene.reset_floor(floor=self.floor_num, additional_elevation=0.02)
+
+        if self.track == 'interactive':
+            self.reset_interactive_objects()
+
+        NavigateRandomInitEnv.reset(self, pos_idx)
+        state = NavigateEnv.reset(self)
+
+        if self.track == 'dynamic':
+            self.reset_dynamic_objects()
+            state = self.get_state()
+
+        return state
 
 class NavigateRandomEnvSim2Real(NavigateRandomEnv):
     def __init__(self,
