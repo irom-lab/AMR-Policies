@@ -2,25 +2,25 @@
 - Make conda environment
          - conda create -n igibson python=3.6 anaconda
 conda activate igibson
-Install Cuda 10.0
+- Install Cuda 10.0
 Extra install information if needed
 https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html
-Install CuDNN 7.6.5 for Cuda 10.0 (Runtime and Developer library)
-Installation guide
+- Install CuDNN 7.6.5 for Cuda 10.0 (Runtime and Developer library)
+ - Installation guide
 https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html
-Install EGL dependency
+- Install EGL dependency
 sudo apt-get install libegl1-mesa-dev
-Install pytorch
-Install tensorflow 1.15.0
+- Install pytorch
+- Install tensorflow 1.15.0
 pip install tensorflow-gpu==1.15.0
 
 ### Gibson Install
-Repo: iron-lab/Gibson-AMR-
-Install igibson
+- Repo: iron-lab/Gibson-AMR-
+- Install igibson
 cd iGibson
 source activate igibson
 pip install -e .
-Verify igibson
+- Verify igibson
 Should see turtlebot in apt taking random actions (need cv2 version 4.2.0 not 4.3.0 for this to work)
 cd examples/demo
 python env_example.py
