@@ -31,16 +31,15 @@ python -u train_eval_rnn_m_reinforce.py \
     --env_type gibson_meg \
     --sim2real_track $sim2real_track \
     --config_file $config_file \
-    --collect_episodes_per_iteration 1 \
-    --learning_rate 1e-3 \
+    --collect_episodes_per_iteration 64 \
+    --learning_rate 0.001 \
     --train_steps_per_iteration 1 \
     --replay_buffer_capacity 5000 \
     --num_eval_episodes 10 \
     --actor_rnn_size 64 \
     --random_init_m 0 \
     --seed 0 \
-    --env_mode 'gui' \
-    --eval_only True \
+    --env_mode 'headless' \
     --eval_interval 100 \
     --AMR_regularizer 0 \
     --gpu_c $gpu_c \
