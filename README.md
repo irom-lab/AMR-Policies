@@ -18,6 +18,9 @@
   - cd iGibson
   - source activate igibson
   - pip install -e .
+- Add folders assets and dataset to iGibson/gibson2
+  - Assets download: http://svl.stanford.edu/igibson/docs/installation.html
+  - 
 - Verify igibson
   - Should see turtlebot in apt taking random actions (need cv2 version 4.2.0 not 4.3.0 for this to work)
   - cd examples/demo
