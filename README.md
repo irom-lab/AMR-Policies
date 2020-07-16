@@ -1,3 +1,68 @@
+### Setup
+Make conda environment
+conda create -n igibson python=3.6 anaconda
+conda activate igibson
+Install Cuda 10.0
+Extra install information if needed
+https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html
+Install CuDNN 7.6.5 for Cuda 10.0 (Runtime and Developer library)
+Installation guide
+https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html
+Install EGL dependency
+sudo apt-get install libegl1-mesa-dev
+Install pytorch
+Install tensorflow 1.15.0
+pip install tensorflow-gpu==1.15.0
+
+### Gibson Install
+Repo: iron-lab/Gibson-AMR-
+Install igibson
+cd iGibson
+source activate igibson
+pip install -e .
+Verify igibson
+Should see turtlebot in apt taking random actions (need cv2 version 4.2.0 not 4.3.0 for this to work)
+cd examples/demo
+python env_example.py
+Install tf-agents - 
+cd iGibson/gibson2/agents
+pip install -e .
+Verify training works w/o errors
+cd iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1
+./train_single_env.sh
+
+### Training Info
+./train_shell.sh to set some high level flags
+Flags are defined in train_eval_rnn_m_reinforce.py along with training code
+Robot config file is located in iGibson/examples/configs as turtlebot_AMR.yaml
+Specified here:
+Init + target loc
+Reward weights
+Sensors
+Etc
+Files I have made edits to:
+iGibson/gibson2/agents/tf_agents/environments/suite_gbson.py
+To create my own env_type ‘gibson_meg’ for more flexibility with randomness of initial and target positions
+iGibson/gibson2/envs/locomotor_env.py
+Two new classes 
+NavigateRandomInitEnvSim2Real
+Interactive objects specified here and where they can be generated pos wise (sorta hacky)
+NavigateRandomInitEnv
+If random_init_m = 0 in train_single_env.sh then will use init pos + orientation in yaml config, else random pos + orientation
+iGibson/gibson2/agents/tf_agents/agents/reinforce/reinforce_agent.py
+Group lasso added to total loss
+iGibson/gibson2/agents/tf_agents/networks/rnn_enconding_network.py 
+Instead of lstm_encoding_network.py
+Use RNN cells instead of LSTM
+iGibson/gibson2/agents/tf_agents/networks/actor_distribution_rnn_m_network.py
+Instead of actor_distribution_rnn_network.py
+Calls on rnn_encoding_network
+To render test checkpoint:
+In train_shell.sh
+Headless to gui
+Add flag eval-only True
+
+
 #  iGibson: the Interactive Gibson Environment
 
 <img src="./docs/images/igibsonlogo.png" width="600"> <img src="./docs/images/igibson.gif" width="250"> 
