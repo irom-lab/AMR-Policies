@@ -35,30 +35,30 @@
 - Robot config file is located in iGibson/examples/configs as turtlebot_AMR.yaml
   - Specified here:
     - Init + target loc
-Reward weights
-Sensors
-Etc
-Files I have made edits to:
-iGibson/gibson2/agents/tf_agents/environments/suite_gbson.py
-To create my own env_type ‘gibson_meg’ for more flexibility with randomness of initial and target positions
-iGibson/gibson2/envs/locomotor_env.py
-Two new classes 
-NavigateRandomInitEnvSim2Real
-Interactive objects specified here and where they can be generated pos wise (sorta hacky)
-NavigateRandomInitEnv
-If random_init_m = 0 in train_single_env.sh then will use init pos + orientation in yaml config, else random pos + orientation
-iGibson/gibson2/agents/tf_agents/agents/reinforce/reinforce_agent.py
-Group lasso added to total loss
-iGibson/gibson2/agents/tf_agents/networks/rnn_enconding_network.py 
-Instead of lstm_encoding_network.py
-Use RNN cells instead of LSTM
-iGibson/gibson2/agents/tf_agents/networks/actor_distribution_rnn_m_network.py
-Instead of actor_distribution_rnn_network.py
-Calls on rnn_encoding_network
-To render test checkpoint:
-In train_shell.sh
-Headless to gui
-Add flag eval-only True
+    - Reward weights
+    - Sensors
+    - Etc
+- Files I have made edits to:
+  - iGibson/gibson2/agents/tf_agents/environments/suite_gbson.py
+    - To create my own env_type ‘gibson_meg’ for more flexibility with randomness of initial and target positions
+- iGibson/gibson2/envs/locomotor_env.py
+  - Two new classes 
+    - NavigateRandomInitEnvSim2Real
+      - Interactive objects specified here and where they can be generated pos wise (sorta hacky)
+    - NavigateRandomInitEnv
+      - If random_init_m = 0 in train_single_env.sh then will use init pos + orientation in yaml config, else random pos + orientation
+- iGibson/gibson2/agents/tf_agents/agents/reinforce/reinforce_agent.py
+  - Group lasso added to total loss
+- iGibson/gibson2/agents/tf_agents/networks/rnn_enconding_network.py 
+  - Instead of lstm_encoding_network.py
+  - Use RNN cells instead of LSTM
+- iGibson/gibson2/agents/tf_agents/networks/actor_distribution_rnn_m_network.py
+  - Instead of actor_distribution_rnn_network.py
+  - Calls on rnn_encoding_network
+- To render test checkpoint:
+  - In train_shell.sh
+    - Headless to gui
+    - Add flag eval-only True
 
 
 #  iGibson: the Interactive Gibson Environment
