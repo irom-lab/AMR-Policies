@@ -22,6 +22,7 @@
   - Assets download: http://svl.stanford.edu/igibson/docs/installation.html
   - Additional assets to be put in asset folder (interactive objects): 
   - Need Rs + Placida scene downloaded for dataset..fill out form https://docs.google.com/forms/d/e/1FAIpQLScWlx5Z1DM1M-wTSXaa6zV8lTFkPmTHW1LqMsoCBDWsTDjBkQ/viewform
+  - Placida found in "Interactive Gibson dataset, 10 scenes, with replaced objects and textures"
 - Verify igibson
   - Should see turtlebot in apt taking random actions (need cv2 version 4.2.0 not 4.3.0 for this to work)
   - cd examples/demo
