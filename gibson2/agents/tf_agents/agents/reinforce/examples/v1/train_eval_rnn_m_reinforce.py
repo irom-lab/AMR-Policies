@@ -195,8 +195,8 @@ def train_eval_rnn_m_reinforce(
         train_checkpoint_interval=100,
         policy_checkpoint_interval=100,
         rb_checkpoint_interval=200,
-        log_interval=25,
-        summary_interval=25,
+        log_interval=15,
+        summary_interval=15,
         summaries_flush_secs=10,
         debug_summaries=False,
         summarize_grads_and_vars=False,
@@ -333,10 +333,12 @@ def train_eval_rnn_m_reinforce(
         config.gpu_options.allow_growth = True
         sess = tf.compat.v1.Session(config=config)
 
+
+
         # Make the replay buffer.
         replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
             data_spec=tf_agent.collect_data_spec,
-            batch_size=tf_env.batch_size,
+            batch_size=tf_env.batch_size, # = num_parallel_envs
             max_length=replay_buffer_capacity)
         replay_observer = [replay_buffer.add_batch]
 
@@ -478,6 +480,7 @@ def train_eval_rnn_m_reinforce(
 
                 time_acc += time.time() - start_time
                 global_step_val = global_step_call()
+                print(global_step_val)
                 if global_step_val % log_interval == 0:
                     logging.info('step = %d, loss = %f', global_step_val, total_loss.loss)
                     steps_per_sec = (global_step_val - timed_at_step) / time_acc
