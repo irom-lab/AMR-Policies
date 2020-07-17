@@ -67,7 +67,7 @@ def load(config_file,
                                         action_timestep=action_timestep,
                                         physics_timestep=physics_timestep,
                                         device_idx=device_idx,
-                                        track='interactive',
+                                        track=sim2real_track,
                                         random_init_m=random_init_m,
                                         seed=seed)
     else:
