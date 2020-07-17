@@ -22,13 +22,13 @@ angular_velocity: 1.5707963267948966
 task: pointgoal # pointgoal|objectgoal|areagoal|reaching
 fisheye: false
 
-initial_pos: [4.5, 0.8, 0.]
-initial_orn: [0.0, 0.0, 1.57]
+initial_pos: [4.5, 3.0, 0.]
+initial_orn: [0.0, 0.0, 3.14]
 #
-target_pos: [1.25, 4.5, 0.0]
-target_orn: [0.0, 0.0, 0.0]
+target_pos: [-2.0, 3.0, 0.0]
+target_orn: [0.0, 0.0, 3.14]
 
-is_discrete: false
+is_discrete: true
 additional_states_dim: 4
 goal_format: polar
 
@@ -40,8 +40,10 @@ potential_reward_weight: 3.0
 electricity_reward_weight: 0.0
 stall_torque_reward_weight: 0.0
 collision_reward_weight: -0.5
+angle_reward_weight: -1.0
 
 max_allowed_collisions: 0
+collision_ignore_link_a_ids: [1, 2, 3, 4]  # ignore collisions with these robot links
 # discount factor
 discount_factor: 0.99
 
