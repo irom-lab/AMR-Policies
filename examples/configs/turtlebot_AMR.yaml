@@ -28,7 +28,7 @@ initial_orn: [0.0, 0.0, 3.14]
 target_pos: [-2.0, 3.0, 0.0]
 target_orn: [0.0, 0.0, 3.14]
 
-is_discrete: true
+is_discrete: false
 additional_states_dim: 4
 goal_format: polar
 
