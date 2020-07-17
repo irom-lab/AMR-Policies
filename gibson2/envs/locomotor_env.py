@@ -88,6 +88,7 @@ class NavigateEnv(BaseEnv):
         # reward weight
         self.potential_reward_weight = self.config.get('potential_reward_weight', 1.0)
         self.collision_reward_weight = self.config.get('collision_reward_weight', -0.1)
+        self.angle_reward_weight = self.config.get('angle_reward_weight', 0.0)
 
         # ignore the agent's collision with these body ids
         self.collision_ignore_body_b_ids = set(self.config.get('collision_ignore_body_b_ids', []))
@@ -468,6 +469,7 @@ class NavigateEnv(BaseEnv):
             new_potential = self.get_l2_potential()
         elif self.reward_type == 'geodesic':
             new_potential = self.get_geodesic_potential()
+            # print("new_potential: ", new_potential )
         potential_reward = self.potential - new_potential
         reward += potential_reward * self.potential_reward_weight  # |potential_reward| ~= 0.1 per step
         self.potential = new_potential
@@ -475,6 +477,10 @@ class NavigateEnv(BaseEnv):
         collision_reward = float(len(collision_links_flatten) > 0)
         self.collision_step += int(collision_reward)
         reward += collision_reward * self.collision_reward_weight  # |collision_reward| ~= 1.0 per step if collision
+        # print("collision_reward: ", collision_reward)
+
+
+        # angle_cost
 
         if self.is_goal_reached():
             reward += self.success_reward  # |success_reward| = 10.0 per step
@@ -943,7 +949,7 @@ class NavigateRandomInitEnvSim2Real(NavigateRandomInitEnv):
         """
         Reset the poses of interactive objects to have no collisions with the scene mesh
         """
-        sample_x = np.linspace(-2, 5, 10000)
+        sample_x = np.linspace(-2, 4, 10000)
         sample_y = np.linspace(2.6, 3.5, 100)
         max_trials = 100
         for obj in self.interactive_objects:
