@@ -40,9 +40,9 @@ potential_reward_weight: 3.0
 electricity_reward_weight: 0.0
 stall_torque_reward_weight: 0.0
 collision_reward_weight: -0.5
-angle_reward_weight: -1.0
+angle_reward_weight: -0.2
 
-max_allowed_collisions: 0
+#max_allowed_collisions: 0
 collision_ignore_link_a_ids: [1, 2, 3, 4]  # ignore collisions with these robot links
 # discount factor
 discount_factor: 0.99
