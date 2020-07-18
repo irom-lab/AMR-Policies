@@ -59,7 +59,12 @@ class NavigateEnv(BaseEnv):
         """
         # initial and target pose
         self.initial_pos = np.array(self.config.get('initial_pos', [0, 0, 0]))
+        self.initial_pos_cp = np.array(self.config.get('initial_pos', [0, 0, 0]))
         self.initial_orn = np.array(self.config.get('initial_orn', [0, 0, 0]))
+        self.initial_orn_cp = np.array(self.config.get('initial_orn', [0, 0, 0]))
+        self.random_init_x_range = np.array(self.config.get('random_init_x_range', [-0.2, 0.2]))
+        self.random_init_y_range = np.array(self.config.get('random_init_y_range', [-0.3, 0.3]))
+        self.random_init_rot_range = np.array(self.config.get('random_init_rot_range', [-0.4, 0.4]))
 
         self.target_pos = np.array(self.config.get('target_pos', [5, 5, 0]))
         self.target_orn = np.array(self.config.get('target_orn', [0, 0, 0]))
@@ -882,6 +887,13 @@ class NavigateRandomInitEnv(NavigateEnv):
             if not (self.target_dist_min < dist < self.target_dist_max):
                 print("WARNING: Failed to sample initial and target positions")
             self.initial_orn = np.array([0, 0, np.random.uniform(0, np.pi * 2)])
+        if self.random_init_m is 2:
+            rand_x = np.random.uniform(self.random_init_x_range[0], self.random_init_x_range[1])
+            rand_y = np.random.uniform(self.random_init_y_range[0], self.random_init_y_range[1])
+            rand_rot = np.random.uniform(self.random_init_rot_range[0], self.random_init_rot_range[1])
+            self.initial_pos = np.array([self.initial_pos_cp[0] + rand_x, self.initial_pos_cp[1] + rand_y, self.initial_pos_cp[2]])
+            self.initial_orn = np.array([0., 0., self.initial_orn_cp[2] + rand_rot])
+
         # else:
         #     self.initial_pos = self.pos_list[self.idx]
         #     self.initial_orn = np.array([0., 0., np.pi/2])#np.array([0, 0, np.random.uniform(0, np.pi * 2)])
