@@ -63,6 +63,7 @@ class NavigateEnv(BaseEnv):
 
         self.target_pos = np.array(self.config.get('target_pos', [5, 5, 0]))
         self.target_orn = np.array(self.config.get('target_orn', [0, 0, 0]))
+        self.target_angle = self.target_orn[2]
 
         self.initial_pos_z_offset = self.config.get('initial_pos_z_offset', 0.1)
         check_collision_distance = self.initial_pos_z_offset * 0.5
@@ -89,6 +90,7 @@ class NavigateEnv(BaseEnv):
         self.potential_reward_weight = self.config.get('potential_reward_weight', 1.0)
         self.collision_reward_weight = self.config.get('collision_reward_weight', -0.1)
         self.angle_reward_weight = self.config.get('angle_reward_weight', 0.0)
+        self.angle_to_target = 0.0
 
         # ignore the agent's collision with these body ids
         self.collision_ignore_body_b_ids = set(self.config.get('collision_ignore_body_b_ids', []))
@@ -452,6 +454,35 @@ class NavigateEnv(BaseEnv):
         """
         return l2_distance(self.target_pos, self.get_position_of_interest())
 
+    def get_angle_reward(self):
+        """
+
+        Returns: angle difference to target
+
+        """
+        parts_xyz = np.array([p.get_pose() for p in self.robots[0].parts.values()]).flatten()
+        self.body_xy = (
+            parts_xyz[0::3].mean(), parts_xyz[1::3].mean())
+
+        self.walk_target_angle = np.arctan2(self.target_pos[1] - self.body_xy[1],
+                                            self.target_pos[0] - self.body_xy[0])
+
+        r, p, yaw = self.robots[0].get_rpy()
+        self.angle_to_target = self.walk_target_angle - yaw
+        if self.angle_to_target > np.pi:
+            self.angle_to_target -= 2 * np.pi
+        elif self.angle_to_target < -np.pi:
+            self.angle_to_target += 2 * np.pi
+
+        is_forward = np.abs(self.angle_to_target) < 1.57
+        diff_angle = np.abs(self.angle_to_target)
+        # print('yaw', yaw)
+        # print("is forward", is_forward)
+        # print("angle to target", self.angle_to_target)
+        # print("diff angle", diff_angle)
+
+        return diff_angle
+
     def is_goal_reached(self):
         return l2_distance(self.get_position_of_interest(), self.target_pos) < self.dist_tol
 
@@ -477,10 +508,10 @@ class NavigateEnv(BaseEnv):
         collision_reward = float(len(collision_links_flatten) > 0)
         self.collision_step += int(collision_reward)
         reward += collision_reward * self.collision_reward_weight  # |collision_reward| ~= 1.0 per step if collision
-        # print("collision_reward: ", collision_reward)
-
 
         # angle_cost
+        angle_reward = self.get_angle_reward()
+        reward += angle_reward * self.angle_reward_weight
 
         if self.is_goal_reached():
             reward += self.success_reward  # |success_reward| = 10.0 per step
@@ -566,6 +597,7 @@ class NavigateEnv(BaseEnv):
         self.after_simulation(cache, collision_links)
 
         state = self.get_state(collision_links)
+
         info = {}
         reward, info = self.get_reward(collision_links, action, info)
         done, info = self.get_termination(collision_links, action, info)
