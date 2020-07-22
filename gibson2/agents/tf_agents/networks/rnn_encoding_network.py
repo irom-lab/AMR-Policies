@@ -121,7 +121,7 @@ class RNNEncodingNetwork(network.Network):
         preprocessing_combiner=preprocessing_combiner,
         conv_layer_params=conv_layer_params,
         fc_layer_params=input_fc_layer_params,
-        activation_fn=activation_fn,
+        activation_fn=tf.keras.activations.tanh,
         kernel_initializer=kernel_initializer,
         dtype=dtype)
 
