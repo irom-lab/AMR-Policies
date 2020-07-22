@@ -22,11 +22,11 @@ angular_velocity: 1.5707963267948966
 task: pointgoal # pointgoal|objectgoal|areagoal|reaching
 fisheye: false
 
-initial_pos: [0.0, 3.0, 0.]
+initial_pos: [2.0, 3.2, 0.]
 initial_orn: [0.0, 0.0, 3.14]
 #
-target_pos: [-2.0, 3.0, 0.0]
-target_orn: [0.0, 0.0, 3.14]
+target_pos: [0.0, 0.0, 0.0]
+target_orn: [0.0, 0.0, 0.0]
 
 is_discrete: false
 additional_states_dim: 4
@@ -65,10 +65,9 @@ ui_num: 2
 ui_components: [RGB_FILLED, DEPTH]
 
 # random_init_m needs to be set to 2
-random_init_x_range: [-0.1, 0.1]
-random_init_y_range: [-0.1, 0.1]
-random_init_z_range: [-0.1, 0.1]
-random_init_rot_range: [-0.1, 0.1]
+random_init_x_range: [-2.0, 2.0]
+random_init_y_range: [-0.0, 0.0]
+random_init_rot_range: [-0.0, 0.0]
 
 speed:
   timestep: 0.001
