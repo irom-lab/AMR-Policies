@@ -134,7 +134,7 @@ flags.DEFINE_float('physics_timestep', 1.0 / 40.0,
 flags.DEFINE_integer('gpu_g', 0,
                      'GPU id for graphics, e.g. Gibson.')
 flags.DEFINE_integer('random_init_m', 0,
-                     'Whether to randomize initial position')
+                     '0: fixed init+orn; 1: random init+orn, 2: random init+orn ranges')
 flags.DEFINE_integer('seed', 0,
                      'seed')
 FLAGS = flags.FLAGS
@@ -194,7 +194,7 @@ def train_eval_rnn_m_reinforce(
         # Params for summaries and logging
         train_checkpoint_interval=100,
         policy_checkpoint_interval=100,
-        rb_checkpoint_interval=200,
+        rb_checkpoint_interval=100,
         log_interval=15,
         summary_interval=15,
         summaries_flush_secs=10,
@@ -495,6 +495,9 @@ def train_eval_rnn_m_reinforce(
 
                 if global_step_val % train_checkpoint_interval == 0:
                     train_checkpointer.save(global_step=global_step_val)
+                    mem_weights = tf_agent._actor_network._rnn_encoder._dynamic_unroll.trainable_weights[0]
+                    weights = sess.run(tf.sort(tf.reduce_sum(tf.abs(mem_weights), axis=0)))
+                    print(weights)
 
                 if global_step_val % policy_checkpoint_interval == 0:
                     policy_checkpointer.save(global_step=global_step_val)
