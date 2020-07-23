@@ -70,6 +70,7 @@ def _get_initial_policy_state(policy, time_steps):
     batch_size = (
             tf.compat.dimension_at_index(time_steps.discount.shape, 0) or
             tf.shape(time_steps.discount)[0])
+
     return policy.get_initial_state(batch_size=batch_size)
 
 
@@ -207,6 +208,7 @@ class ReinforceAgent(tf_agent.TFAgent):
         # boundaries. This is needed in cases where episodes are truncated before
         # reaching a terminal state. Note experience is a batch of trajectories
         # where reward=next_step.reward so the mask may look shifted at first.
+
         non_last_mask = tf.cast(
             tf.math.not_equal(experience.next_step_type, ts.StepType.LAST),
             tf.float32)
@@ -306,6 +308,7 @@ class ReinforceAgent(tf_agent.TFAgent):
         policy_state = _get_initial_policy_state(self.collect_policy, time_steps)
         actions_distribution = self.collect_policy.distribution(
             time_steps, policy_state=policy_state).action
+
 
         policy_gradient_loss = self.policy_gradient_loss(
             actions_distribution,
@@ -432,6 +435,8 @@ class ReinforceAgent(tf_agent.TFAgent):
 
     def group_lasso_loss(self):
         mem_weights = self._actor_network._rnn_encoder._dynamic_unroll.trainable_weights[0]
+        print('SANITY CHECK: 256 + rnn size')
+        print(mem_weights.shape)
         group_lasso_loss = tf.reduce_sum(tf.sqrt(tf.reduce_sum(mem_weights ** 2, axis=0)))
 
         return group_lasso_loss
