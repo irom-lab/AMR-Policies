@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# CoRL: This file is modified from TF-agents gibson_sim2real branch:
+# agents/tf_agents/agents/sac/examples/v1/train_single_env.sh
+
 gpu_c="0"
 gpu_g="0"
 robot="turtlebot"
@@ -28,20 +31,20 @@ echo "log_dir:" $log_dir
 
 python -u train_eval_rnn_m_reinforce.py \
     --root_dir $log_dir \
-    --env_type gibson_meg \
+    --env_type gibson_m \
     --sim2real_track $sim2real_track \
     --config_file $config_file \
     --collect_episodes_per_iteration 1 \
     --learning_rate 1e-4 \
     --train_steps_per_iteration 1 \
-    --replay_buffer_capacity 400 \
+    --replay_buffer_capacity 1000 \
     --num_eval_episodes 10 \
-    --actor_rnn_size 70 \
+    --actor_rnn_size 100 \
     --random_init_m 2 \
-    --seed 0 \
-    --env_mode 'headless' \
+    --seed 2 \
+    --env_mode 'gui' \
     --eval_interval 50 \
-    --AMR_regularizer 5e-2 \
+    --AMR_regularizer 0 \
     --gpu_c $gpu_c \
     --gpu_g $gpu_g \
     --num_parallel_environments 3

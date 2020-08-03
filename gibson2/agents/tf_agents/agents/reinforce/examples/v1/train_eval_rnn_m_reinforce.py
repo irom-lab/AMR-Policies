@@ -21,6 +21,9 @@ python tf_agents/agents/sac/examples/v1/train_eval.py \
   --root_dir=$HOME/tmp/sac_v1/gym/HalfCheetah-v2/ \
   --alsologtostderr
 ```
+
+CoRL: This file is a modified version from TF-agents gibson_sim2real branch:
+agents/tf_agents/agents/sac/examples/v1/train_eval_rnn.py
 """
 
 from __future__ import absolute_import
@@ -409,6 +412,9 @@ def train_eval_rnn_m_reinforce(
             train_checkpointer.initialize_or_restore(sess)
 
             if eval_only:
+                mem_weights = tf_agent._actor_network._rnn_encoder._dynamic_unroll.trainable_weights[0]
+                weights = sess.run(tf.sort(tf.reduce_sum(tf.abs(mem_weights), axis=0)))
+                print(weights)
                 metric_utils.compute_summaries(
                     eval_metrics,
                     eval_py_env,
@@ -490,8 +496,6 @@ def train_eval_rnn_m_reinforce(
                         feed_dict={steps_per_second_ph: steps_per_sec})
                     timed_at_step = global_step_val
                     time_acc = 0
-
-
 
                 if global_step_val % train_checkpoint_interval == 0:
                     train_checkpointer.save(global_step=global_step_val)
