@@ -22,6 +22,7 @@ from gibson2.data_utils.utils import get_train_models
 from gibson2.envs.locomotor_env import NavigateEnv, NavigateRandomEnv, NavigateRandomEnvSim2Real, NavigateRandomInitEnvSim2Real
 import gibson2
 
+# CoRL: added gibson_m
 
 @gin.configurable
 def load(config_file,
@@ -61,7 +62,7 @@ def load(config_file,
                                         physics_timestep=physics_timestep,
                                         device_idx=device_idx,
                                         track=sim2real_track)
-    elif env_type == 'gibson_meg':
+    elif env_type == 'gibson_m':
         env = NavigateRandomInitEnvSim2Real(config_file=config_file,
                                         mode=env_mode,
                                         action_timestep=action_timestep,
