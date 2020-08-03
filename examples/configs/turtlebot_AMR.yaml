@@ -9,11 +9,6 @@ trav_map_resolution: 0.1
 trav_map_erosion: 2
 
 # robot
-#robot: Fetch
-##velocity: 1.0
-#wheel_velocity: 1.0
-#torso_lift_velocity: 1.0
-#arm_velocity: 1.0
 robot: Turtlebot
 linear_velocity: 0.5
 angular_velocity: 1.5707963267948966
