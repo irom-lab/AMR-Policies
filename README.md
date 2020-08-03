@@ -1,17 +1,22 @@
 ### Setup
 - Make conda environment
-  - conda create -n igibson python=3.6 anaconda
-  - conda activate igibson
+```
+  conda create -n igibson python=3.6 anaconda
+  conda activate igibson
+```
 - Install Cuda 10.0
   - Extra install information if needed https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html
 - Install CuDNN 7.6.5 for Cuda 10.0 (Runtime and Developer library)
   - Installation guide https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html
 - Install EGL dependency
-  - sudo apt-get install libegl1-mesa-dev
+```
+  sudo apt-get install libegl1-mesa-dev
+  ```
 - Install pytorch
 - Install tensorflow 1.15.0
-  - pip install tensorflow-gpu==1.15.0
-
+```
+  pip install tensorflow-gpu==1.15.0
+```
 ### Gibson Install
 - Repo: iron-lab/Gibson-AMR-
 - Install igibson
