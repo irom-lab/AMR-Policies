@@ -1,4 +1,5 @@
 ### Setup
+Installation instructions are a combination from http://svl.stanford.edu/igibson/docs/ and https://github.com/StanfordVL/GibsonSim2RealChallenge. 
 - Make conda environment
 ```
   conda create -n igibson python=3.6 anaconda
@@ -18,8 +19,7 @@
   pip install tensorflow-gpu==1.15.0
 ```
 ### Gibson Install
-- Repo: iron-lab/Gibson-AMR-
-- Install igibson
+- Download and install iGibson
   - cd iGibson
   - source activate igibson
   - pip install -e .
