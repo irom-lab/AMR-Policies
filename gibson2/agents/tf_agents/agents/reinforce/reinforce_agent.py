@@ -16,6 +16,8 @@
 """A REINFORCE Agent.
 Implements the REINFORCE algorithm from (Williams, 1992):
 http://www-anw.cs.umass.edu/~barto/courses/cs687/williams92simple.pdf
+
+CoRL: Modified to include AMR regularizer
 """
 from __future__ import absolute_import
 from __future__ import division
