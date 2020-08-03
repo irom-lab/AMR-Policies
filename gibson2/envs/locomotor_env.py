@@ -17,6 +17,8 @@ import time
 import collections
 import logging
 
+# CoRL: added classes NavigateRandomInitEnv and NavigateRandomInitEnvSim2Real modelled after iGibson's NavigateRandomEnv
+# and NavigateInitEnvSim2Real
 
 class NavigateEnv(BaseEnv):
     """
@@ -481,10 +483,6 @@ class NavigateEnv(BaseEnv):
 
         is_forward = np.abs(self.angle_to_target) < 1.57
         diff_angle = np.abs(self.angle_to_target)
-        # print('yaw', yaw)
-        # print("is forward", is_forward)
-        # print("angle to target", self.angle_to_target)
-        # print("diff angle", diff_angle)
 
         return diff_angle
 
@@ -862,7 +860,7 @@ class NavigateRandomInitEnv(NavigateEnv):
         self.target_dist_min = self.config.get('target_dist_min', 1.0)
         self.target_dist_max = self.config.get('target_dist_max', 7.0)
         self.random_init_m = random_init_m
-        self.idx = idx
+        self.idx = 0
 
 
     def reset_initial_and_target_pos(self):
@@ -877,7 +875,6 @@ class NavigateRandomInitEnv(NavigateEnv):
             max_trials = 500
             dist = 0.0
             for _ in range(max_trials):
-                # _, self.target_pos = self.scene.get_random_point_floor(self.floor_num, self.random_height)
                 if self.scene.build_graph:
                     _, dist = self.get_shortest_path(from_initial_pos=True)
                 else:
@@ -894,17 +891,24 @@ class NavigateRandomInitEnv(NavigateEnv):
             self.initial_pos = np.array([self.initial_pos_cp[0] + rand_x, self.initial_pos_cp[1] + rand_y, self.initial_pos_cp[2]])
             self.initial_orn = np.array([0., 0., self.initial_orn_cp[2] + rand_rot])
 
-        # else:
-        #     self.initial_pos = self.pos_list[self.idx]
-        #     self.initial_orn = np.array([0., 0., np.pi/2])#np.array([0, 0, np.random.uniform(0, np.pi * 2)])
-        # print(self.initial_pos)
-        # print(self.initial_orn)
+        if self.random_init_m is 3:
+            x_test1 = np.load("../test1.npy")
+            self.initial_pos = np.array([self.initial_pos_cp[0] + x_test1[self.idx-1], self.initial_pos_cp[1], self.initial_pos_cp[2]])
+        if self.random_init_m is 4:
+            x_test2 = np.load("../test2_x.npy")
+            y_test2 = np.load("../test2_y.npy")
+            rot_test2 = np.load("../test2_rot.npy")
+            self.initial_pos = np.array(
+                [self.initial_pos_cp[0] + x_test2[self.idx-1], self.initial_pos_cp[1] + y_test2[self.idx-1], self.initial_pos_cp[2]])
+            self.initial_orn = np.array([0., 0., self.initial_orn_cp[2] + rot_test2[self.idx-1]])
+
+
 
     def reset(self, pos_idx=0):
         """
         Reset episode
         """
-        self.idx = pos_idx
+        self.idx = self.idx + 1
         # self.floor_num = self.scene.get_random_floor()
         #
         # if self.scene.is_interactive:
