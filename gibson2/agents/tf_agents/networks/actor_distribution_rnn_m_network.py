@@ -13,7 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample Keras actor network  with LSTM cells that generates distributions."""
+"""Sample Keras actor network  with LSTM cells that generates distributions.
+
+CoRL: This file is modified from TF-agents gibson_sim2real branch:
+agents/tf_agents/networks/actor_distribution_rnn_network.py
+to call on rnn_encoding_network instead of lstm_encoding_network
+
+"""
+
 
 from __future__ import absolute_import
 from __future__ import division

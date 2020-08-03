@@ -22,6 +22,12 @@ Implements a network that will generate the following layers:
   [optional]: Dense  # input_fc_layer_params
   [optional]: LSTM cell
   [optional]: Dense  # output_fc_layer_params
+
+
+
+CoRL: This file is modified from TF-agents gibson_sim2real branch:
+agents/tf_agents/networks/lstm_encoding_network.py
+to work with simple rnn's instead of LSTMs
 """
 
 from __future__ import absolute_import
@@ -37,6 +43,13 @@ from tf_agents.networks import network
 from tf_agents.specs import tensor_spec
 from tf_agents.trajectories import time_step
 from tf_agents.utils import nest_utils
+from tensorflow.python.keras.engine.base_layer import Layer
+from tensorflow.python.keras import backend as K
+from tensorflow.python.util import nest
+
+import collections
+
+import numpy as np
 
 
 @gin.configurable
@@ -128,10 +141,7 @@ class RNNEncodingNetwork(network.Network):
 
     # Create RNN cell
     if len(rnn_size) == 1:
-      cell = tf.keras.layers.StackedRNNCells([tf.keras.layers.SimpleRNNCell(
-          rnn_size[0],
-          use_bias=False,
-          dtype=dtype)])
+      cell = tf.keras.layers.StackedRNNCells([tf.keras.layers.SimpleRNNCell(rnn_size[0], dtype=dtype)])
 
     else:
         cell = tf.keras.layers.StackedRNNCells([
@@ -208,7 +218,6 @@ class RNNEncodingNetwork(network.Network):
         reset_mask,
         initial_state=network_state)
 
-
     for layer in self._output_encoder:
       state = layer(state)
 
@@ -217,3 +226,4 @@ class RNNEncodingNetwork(network.Network):
       state = tf.squeeze(state, [1])
 
     return state, network_state
+
