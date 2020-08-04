@@ -71,5 +71,6 @@ cd iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1
     - headless to gui
     - Add flag `--eval-only True`
 - To see previous checkpoint policies, change checkpoint header in `test/train/checkpoint` and `test/train/policy/checkpoint`
+- flag `--random_init_m 2`, 2: training, 3: test, 4: test with enlarged set of initial conditions
 
 
