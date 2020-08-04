@@ -37,10 +37,14 @@ pip install -e .
   cd examples/demo
   python env_example.py
   ```
-- Install tf-agents 
-  - cd iGibson/gibson2/agents
-  - pip install -e .
-  
+- Install tf-agents gibson-sim2real branch
+  - Add "agents" folder to iGibson/gibson2
+  - Copy repo downloaded form https://github.com/StanfordVL/agents/tree/gibson_sim2real to agents folder
+  - Install
+```
+  cd iGibson/gibson2/agents
+  pip install -e .
+  ```
   
 - Verify training works w/o errors
   - cd iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1
