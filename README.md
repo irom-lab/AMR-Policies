@@ -32,7 +32,7 @@ pip install -e .
   - Placida is found in "Interactive Gibson dataset, 10 scenes, with replaced objects and textures"
   - Follow Gibson installation guide for Rs download
 - Verify iGibson install
-  - Should see turtlebot in apt taking random actions (need cv2 version 4.2.0 not 4.3.0 for this to work)
+  - Should see TurtleBot in apt taking random actions (need cv2 version 4.2.0 not 4.3.0 for this to work)
   ```
   cd examples/demo
   python env_example.py
