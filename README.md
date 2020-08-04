@@ -48,7 +48,7 @@ pip install -e .
 - Add AMR related files
   - turtlebot_AMR.yaml to `iGibson/examples/configs`
   - actor_distribution_rnn_m_network.py to `iGibson/gibson2/agents/tf_agents/networks`
-    - Note: a modified version of TF-agent's actor_distribution_rnn_network.py
+    - Note: a modified version of TF-agent's actor_distribution_rnn_network.py [[1]] (#1)
   - rnn_encoding_network.py to `iGibson/gibson2/agents/tf_agents/networks`
     - Note: a modified version of TF-agent's lstm_encoding_network.py
   - test1.npy, test2_rot.npy, test2_x.npy, test2_y.npy to `iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1`
@@ -73,4 +73,8 @@ cd iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1
 - To see previous checkpoint policies, change checkpoint header in `test/train/checkpoint` and `test/train/policy/checkpoint`
 - flag `--random_init_m 2`, 2: training, 3: test, 4: test with enlarged set of initial conditions
 
-
+## References
+<a id="1">[1]</a> 
+Dijkstra, E. W. (1968). 
+Go to statement considered harmful. 
+Communications of the ACM, 11(3), 147-148.
