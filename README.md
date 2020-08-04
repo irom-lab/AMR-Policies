@@ -48,7 +48,7 @@ pip install -e .
 - Add AMR related files
   - turtlebot_AMR.yaml to `iGibson/examples/configs`
   - actor_distribution_rnn_m_network.py to `iGibson/gibson2/agents/tf_agents/networks`
-    - Note: a modified version of TF-agent's actor_distribution_rnn_network.py [[1]] (#1)
+    - Note: a modified version of TF-agent's actor_distribution_rnn_network.py [[1]](#1)
   - rnn_encoding_network.py to `iGibson/gibson2/agents/tf_agents/networks`
     - Note: a modified version of TF-agent's lstm_encoding_network.py
   - test1.npy, test2_rot.npy, test2_x.npy, test2_y.npy to `iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1`
