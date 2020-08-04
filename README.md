@@ -26,7 +26,7 @@ cd iGibson
 source activate igibson
 pip install -e .
 ```
-- Add folders "assets" and "dataset" to iGibson/gibson2
+- Add folders "assets" and "dataset" to `iGibson/gibson2`
   - Assets download: http://svl.stanford.edu/igibson/docs/installation.html
   - Need Rs + Placida scene downloaded for dataset folder. Fill out form https://docs.google.com/forms/d/e/1FAIpQLScWlx5Z1DM1M-wTSXaa6zV8lTFkPmTHW1LqMsoCBDWsTDjBkQ/viewform
   - Placida is found in "Interactive Gibson dataset, 10 scenes, with replaced objects and textures"
@@ -41,11 +41,21 @@ pip install -e .
   - Add "agents" folder to iGibson/gibson2
   - Copy repo downloaded form https://github.com/StanfordVL/agents/tree/gibson_sim2real to agents folder
   - Install
-```
+  ```
   cd iGibson/gibson2/agents
   pip install -e .
   ```
-  
+- Add AMR related files
+  - turtlebot_AMR.yaml to `iGibson/examples/configs`
+  - actor_distribution_rnn_m_network.py to `iGibson/gibson2/agents/tf_agents/networks`
+    - Note: a modified version of TF-agent's actor_distribution_rnn_network.py
+  - rnn_encoding_network.py to `iGibson/gibson2/agents/tf_agents/networks`
+    - Note: a modified version of TF-agent's lstm_encoding_network.py
+  - test1.npy, test2_rot.npy, test2_x.npy, test2_y.npy to `iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1`
+  - train_eval_rnn_m_reinforce.py and train_shell.sh to `iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1`
+    - Note: modified versions of train_eval_rnn.py and train_single_env.sh found in `iGibson/gibson2/agents/tf_agents/agents/sac/examples/v1`
+- Replace files with modified AMR versions
+  - 
 - Verify training works w/o errors
   - cd iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1
   - ./train_shell.sh
