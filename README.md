@@ -45,7 +45,7 @@ pip install -e .
   cd iGibson/gibson2/agents
   pip install -e .
   ```
-- Add AMR related files
+- Add AMR related files (Pre-configured repo too large to upload)
   - turtlebot_AMR.yaml to `iGibson/examples/configs`
   - actor_distribution_rnn_m_network.py to `iGibson/gibson2/agents/tf_agents/networks`
     - Note: a modified version of TF-agent's actor_distribution_rnn_network.py [[1]](#1)
@@ -83,15 +83,15 @@ S. Savarese. Interactive Gibson benchmark: A benchmark for interactive navigatio
 tered environments. IEEE Robotics and Automation Letters, 5(2):713–720, 2020.
 
 <a id="3">[3]</a> 
-Martín Abadi, Ashish Agarwal, Paul Barham, Eugene Brevdo,
-Zhifeng Chen, Craig Citro, Greg S. Corrado, Andy Davis,
-Jeffrey Dean, Matthieu Devin, Sanjay Ghemawat, Ian Goodfellow,
-Andrew Harp, Geoffrey Irving, Michael Isard, Rafal Jozefowicz, Yangqing Jia,
-Lukasz Kaiser, Manjunath Kudlur, Josh Levenberg, Dan Mané, Mike Schuster,
-Rajat Monga, Sherry Moore, Derek Murray, Chris Olah, Jonathon Shlens,
-Benoit Steiner, Ilya Sutskever, Kunal Talwar, Paul Tucker,
-Vincent Vanhoucke, Vijay Vasudevan, Fernanda Viégas,
-Oriol Vinyals, Pete Warden, Martin Wattenberg, Martin Wicke,
-Yuan Yu, and Xiaoqiang Zheng.
+M. Abadi, A. Agarwal, P. Barham, E. Brevdo,
+Z. Chen, C. Citro, G. S. Corrado, A. Davis,
+J. Dean, M. Devin, S. Ghemawat, I. Goodfellow,
+A. Harp, G. Irving, M. Isard, R. Jozefowicz, Y. Jia,
+L. Kaiser, M. Kudlur, J. Levenberg, D. Mané, M. Schuster,
+R. Monga, S. Moore, D. Murray, C. Olah, J. Shlens,
+B. Steiner, I. Sutskever, K. Talwar, P. Tucker,
+V. Vanhoucke, V. Vasudevan, F. Viégas,
+O. Vinyals, P. Warden, M. Wattenberg, M. Wicke,
+Y. Yu, and X. Zheng.
 TensorFlow: Large-scale machine learning on heterogeneous systems,
 2015. Software available from tensorflow.org.
