@@ -1,4 +1,4 @@
-The following instructions are for installing a modified iGibson for AMR-Policies and running the third example seen in "Learning to Actively Reduce Memory Requirements for Robot Control Tasks" by Meghan Booker and Anirudha Majumdar.
+The following instructions are for installing a modified iGibson for AMR-Policies and running the third example seen in "Learning to Actively Reduce Memory Requirements for Robot Control Tasks."
 
 ### Setup
 Installation instructions are a combination from http://svl.stanford.edu/igibson/docs/ and https://github.com/StanfordVL/GibsonSim2RealChallenge. Verified on Ubuntu 18.04.
