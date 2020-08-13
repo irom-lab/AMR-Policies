@@ -18,7 +18,7 @@ import collections
 import logging
 
 '''
-CoRL: added classes NavigateRandomInitEnv and NavigateRandomInitEnvSim2Real modelled after iGibson's NavigateRandomEnv
+AMR-Changes: added classes NavigateRandomInitEnv and NavigateRandomInitEnvSim2Real modelled after iGibson's NavigateRandomEnv
 and NavigateInitEnvSim2Real
 Original Authors:
 F. Xia, W. B. Shen, C. Li, P. Kasimbeg, M. E. Tchapmi, A. Toshev, R. Martı́n-Martı́n, and
