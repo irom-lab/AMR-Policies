@@ -13,6 +13,24 @@
 # limitations under the License.
 # ==============================================================================
 # pylint: disable=protected-access
+
+'''
+CoRL: modified SimpleRNNCell
+Original Authors:
+Martín Abadi, Ashish Agarwal, Paul Barham, Eugene Brevdo,
+Zhifeng Chen, Craig Citro, Greg S. Corrado, Andy Davis,
+Jeffrey Dean, Matthieu Devin, Sanjay Ghemawat, Ian Goodfellow,
+Andrew Harp, Geoffrey Irving, Michael Isard, Rafal Jozefowicz, Yangqing Jia,
+Lukasz Kaiser, Manjunath Kudlur, Josh Levenberg, Dan Mané, Mike Schuster,
+Rajat Monga, Sherry Moore, Derek Murray, Chris Olah, Jonathon Shlens,
+Benoit Steiner, Ilya Sutskever, Kunal Talwar, Paul Tucker,
+Vincent Vanhoucke, Vijay Vasudevan, Fernanda Viégas,
+Oriol Vinyals, Pete Warden, Martin Wattenberg, Martin Wicke,
+Yuan Yu, and Xiaoqiang Zheng.
+TensorFlow: Large-scale machine learning on heterogeneous systems,
+2015. Software available from tensorflow.org.
+'''
+
 """Recurrent layers and their base classes.
 """
 from __future__ import absolute_import
@@ -48,21 +66,16 @@ from tensorflow.python.util.tf_export import keras_export
 @keras_export('keras.layers.StackedRNNCells')
 class StackedRNNCells(Layer):
   """Wrapper allowing a stack of RNN cells to behave as a single cell.
-
   Used to implement efficient stacked RNNs.
-
   Arguments:
     cells: List of RNN cell instances.
-
   Examples:
-
   ```python
   cells = [
       keras.layers.LSTMCell(output_dim),
       keras.layers.LSTMCell(output_dim),
       keras.layers.LSTMCell(output_dim),
   ]
-
   inputs = keras.Input((timesteps, input_dim))
   x = keras.layers.RNN(cells)(inputs)
   ```
@@ -182,7 +195,6 @@ class StackedRNNCells(Layer):
 @keras_export('keras.layers.RNN')
 class RNN(Layer):
   """Base class for recurrent layers.
-
   Arguments:
     cell: A RNN cell instance or a list of RNN cell instances.
       A RNN cell is a class that has:
@@ -244,7 +256,6 @@ class RNN(Layer):
       RNN calculation. However, most TensorFlow data is batch-major, so by
       default this function accepts input and emits output in batch-major
       form.
-
   Call arguments:
     inputs: Input tensor.
     mask: Binary tensor of shape `(samples, timesteps)` indicating whether
@@ -256,11 +267,9 @@ class RNN(Layer):
       call of the cell.
     constants: List of constant tensors to be passed to the cell at each
       timestep.
-
   Input shape:
     N-D tensor with shape `(batch_size, timesteps, ...)` or
     `(timesteps, batch_size, ...)` when time_major is True.
-
   Output shape:
     - If `return_state`: a list of tensors. The first tensor is
       the output. The remaining tensors are the last states,
@@ -272,19 +281,16 @@ class RNN(Layer):
       `(timesteps, batch_size, output_size)` when `time_major` is True.
     - Else, N-D tensor with shape `(batch_size, output_size)`, where
       `output_size` could be a high dimension tensor shape.
-
   Masking:
     This layer supports masking for input data with a variable number
     of timesteps. To introduce masks to your data,
     use an [Embedding](embeddings.md) layer with the `mask_zero` parameter
     set to `True`.
-
   Note on using statefulness in RNNs:
     You can set RNN layers to be 'stateful', which means that the states
     computed for the samples in one batch will be reused as initial states
     for the samples in the next batch. This assumes a one-to-one mapping
     between samples in different successive batches.
-
     To enable statefulness:
       - Specify `stateful=True` in the layer constructor.
       - Specify a fixed batch size for your model, by passing
@@ -296,21 +302,17 @@ class RNN(Layer):
         *including the batch size*.
         It should be a tuple of integers, e.g. `(32, 10, 100)`.
       - Specify `shuffle=False` when calling fit().
-
     To reset the states of your model, call `.reset_states()` on either
     a specific layer, or on your entire model.
-
   Note on specifying the initial state of RNNs:
     You can specify the initial state of RNN layers symbolically by
     calling them with the keyword argument `initial_state`. The value of
     `initial_state` should be a tensor or list of tensors representing
     the initial state of the RNN layer.
-
     You can specify the initial state of RNN layers numerically by
     calling `reset_states` with the keyword argument `states`. The value of
     `states` should be a numpy array or list of numpy arrays representing
     the initial state of the RNN layer.
-
   Note on passing external constants to RNNs:
     You can pass "external" constants to the cell using the `constants`
     keyword argument of `RNN.__call__` (as well as `RNN.call`) method. This
@@ -318,19 +320,14 @@ class RNN(Layer):
     `constants`. Such constants can be used to condition the cell
     transformation on additional static inputs (not changing over time),
     a.k.a. an attention mechanism.
-
   Examples:
-
   ```python
   # First, let's define a RNN Cell, as a layer subclass.
-
   class MinimalRNNCell(keras.layers.Layer):
-
       def __init__(self, units, **kwargs):
           self.units = units
           self.state_size = units
           super(MinimalRNNCell, self).__init__(**kwargs)
-
       def build(self, input_shape):
           self.kernel = self.add_weight(shape=(input_shape[-1], self.units),
                                         initializer='uniform',
@@ -340,22 +337,17 @@ class RNN(Layer):
               initializer='uniform',
               name='recurrent_kernel')
           self.built = True
-
       def call(self, inputs, states):
           prev_output = states[0]
           h = K.dot(inputs, self.kernel)
           output = h + K.dot(prev_output, self.recurrent_kernel)
           return output, [output]
-
   # Let's use this cell in a RNN layer:
-
   cell = MinimalRNNCell(32)
   x = keras.Input((None, 5))
   layer = RNN(cell)
   y = layer(x)
-
   # Here's how to use the cell to build a stacked RNN:
-
   cells = [MinimalRNNCell(32), MinimalRNNCell(64)]
   x = keras.Input((None, 5))
   layer = RNN(cells)
@@ -564,12 +556,10 @@ class RNN(Layer):
   @staticmethod
   def _validate_state_spec(cell_state_sizes, init_state_specs):
     """Validate the state spec between the initial_state and the state_size.
-
     Args:
       cell_state_sizes: list, the `state_size` attribute from the cell.
       init_state_specs: list, the `state_spec` from the initial_state that is
         passed in `call()`.
-
     Raises:
       ValueError: When initial state spec is not compatible with the state size.
     """
@@ -892,25 +882,18 @@ class RNN(Layer):
 @keras_export('keras.layers.AbstractRNNCell')
 class AbstractRNNCell(Layer):
   """Abstract object representing an RNN cell.
-
   This is the base class for implementing RNN cells with custom behavior.
-
   Every `RNNCell` must have the properties below and implement `call` with
   the signature `(output, next_state) = call(input, state)`.
-
   Examples:
-
   ```python
     class MinimalRNNCell(AbstractRNNCell):
-
       def __init__(self, units, **kwargs):
         self.units = units
         super(MinimalRNNCell, self).__init__(**kwargs)
-
       @property
       def state_size(self):
         return self.units
-
       def build(self, input_shape):
         self.kernel = self.add_weight(shape=(input_shape[-1], self.units),
                                       initializer='uniform',
@@ -920,18 +903,15 @@ class AbstractRNNCell(Layer):
             initializer='uniform',
             name='recurrent_kernel')
         self.built = True
-
       def call(self, inputs, states):
         prev_output = states[0]
         h = K.dot(inputs, self.kernel)
         output = h + K.dot(prev_output, self.recurrent_kernel)
         return output, output
   ```
-
   This definition of cell differs from the definition used in the literature.
   In the literature, 'cell' refers to an object with a single scalar output.
   This definition refers to a horizontal array of such units.
-
   An RNN cell, in the most abstract setting, is anything that has
   a state and performs some operation that takes a matrix of inputs.
   This operation results in an output matrix with `self.output_size` columns.
@@ -944,14 +924,12 @@ class AbstractRNNCell(Layer):
 
   def call(self, inputs, states):
     """The function that contains the logic for one RNN step calculation.
-
     Args:
       inputs: the input tensor, which is a slide from the overall RNN input by
         the time dimension (usually the second dimension).
       states: the state tensor from previous step, which has the same shape
         as `(batch, state_size)`. In the case of timestep 0, it will be the
         initial state user specified, or zero filled tensor otherwise.
-
     Returns:
       A tuple of two tensors:
         1. output tensor for the current timestep, with size `output_size`.
@@ -962,7 +940,6 @@ class AbstractRNNCell(Layer):
   @property
   def state_size(self):
     """size(s) of state(s) used by this cell.
-
     It can be represented by an Integer, a TensorShape or a tuple of Integers
     or TensorShapes.
     """
@@ -979,7 +956,6 @@ class AbstractRNNCell(Layer):
 
 class DropoutRNNCellMixin(object):
   """Object that hold dropout related fields for RNN Cell.
-
   This class is not a standalone RNN cell. It suppose to be used with a RNN cell
   by multiple inheritance. Any cell that mix with class should have following
   fields:
@@ -1008,7 +984,6 @@ class DropoutRNNCellMixin(object):
 
   def reset_dropout_mask(self):
     """Reset the cached dropout masks if any.
-
     This is important for the RNN layer to invoke this in it call() method so
     that the cached mask is cleared before calling the cell.call(). The mask
     should be cached across the timestep within the same batch, but shouldn't
@@ -1020,7 +995,6 @@ class DropoutRNNCellMixin(object):
 
   def reset_recurrent_dropout_mask(self):
     """Reset the cached recurrent dropout masks if any.
-
     This is important for the RNN layer to invoke this in it call() method so
     that the cached mask is cleared before calling the cell.call(). The mask
     should be cached across the timestep within the same batch, but shouldn't
@@ -1032,10 +1006,8 @@ class DropoutRNNCellMixin(object):
 
   def get_dropout_mask_for_cell(self, inputs, training, count=1):
     """Get the dropout mask for RNN cell's input.
-
     It will create mask based on context if there isn't any existing cached
     mask. If a new mask is generated, it will update the cache in the cell.
-
     Args:
       inputs: the input tensor whose shape will be used to generate dropout
         mask.
@@ -1068,10 +1040,8 @@ class DropoutRNNCellMixin(object):
 
   def get_recurrent_dropout_mask_for_cell(self, inputs, training, count=1):
     """Get the recurrent dropout mask for RNN cell.
-
     It will create mask based on context if there isn't any existing cached
     mask. If a new mask is generated, it will update the cache in the cell.
-
     Args:
       inputs: the input tensor whose shape will be used to generate dropout
         mask.
@@ -1108,7 +1078,6 @@ class DropoutRNNCellMixin(object):
 @keras_export('keras.layers.SimpleRNNCell')
 class SimpleRNNCell(DropoutRNNCellMixin, Layer):
   """Cell class for SimpleRNN.
-
   Arguments:
     units: Positive integer, dimensionality of the output space.
     activation: Activation function to use.
@@ -1137,7 +1106,6 @@ class SimpleRNNCell(DropoutRNNCellMixin, Layer):
     recurrent_dropout: Float between 0 and 1.
       Fraction of the units to drop for
       the linear transformation of the recurrent state.
-
   Call arguments:
     inputs: A 2D tensor.
     states: List of state tensors corresponding to the previous timestep.
@@ -1275,7 +1243,6 @@ class SimpleRNNCell(DropoutRNNCellMixin, Layer):
 @keras_export('keras.layers.SimpleRNN')
 class SimpleRNN(RNN):
   """Fully-connected RNN where the output is to be fed back to input.
-
   Arguments:
     units: Positive integer, dimensionality of the output space.
     activation: Activation function to use.
@@ -1323,7 +1290,6 @@ class SimpleRNN(RNN):
       Unrolling can speed-up a RNN,
       although it tends to be more memory-intensive.
       Unrolling is only suitable for short sequences.
-
   Call arguments:
     inputs: A 3D tensor.
     mask: Binary tensor of shape `(samples, timesteps)` indicating whether
@@ -1499,7 +1465,6 @@ class SimpleRNN(RNN):
 @keras_export(v1=['keras.layers.GRUCell'])
 class GRUCell(DropoutRNNCellMixin, Layer):
   """Cell class for the GRU layer.
-
   Arguments:
     units: Positive integer, dimensionality of the output space.
     activation: Activation function to use.
@@ -1542,7 +1507,6 @@ class GRUCell(DropoutRNNCellMixin, Layer):
     reset_after: GRU convention (whether to apply reset gate after or
       before matrix multiplication). False = "before" (default),
       True = "after" (CuDNN compatible).
-
   Call arguments:
     inputs: A 2D tensor.
     states: List of state tensors corresponding to the previous timestep.
@@ -1769,16 +1733,13 @@ class GRUCell(DropoutRNNCellMixin, Layer):
 @keras_export(v1=['keras.layers.GRU'])
 class GRU(RNN):
   """Gated Recurrent Unit - Cho et al. 2014.
-
   There are two variants. The default one is based on 1406.1078v3 and
   has reset gate applied to hidden state before matrix multiplication. The
   other one is based on original 1406.1078v1 and has the order reversed.
-
   The second variant is compatible with CuDNNGRU (GPU-only) and allows
   inference on CPU. Thus it has separate biases for `kernel` and
   `recurrent_kernel`. Use `'reset_after'=True` and
   `recurrent_activation='sigmoid'`.
-
   Arguments:
     units: Positive integer, dimensionality of the output space.
     activation: Activation function to use.
@@ -1847,7 +1808,6 @@ class GRU(RNN):
     reset_after: GRU convention (whether to apply reset gate after or
       before matrix multiplication). False = "before" (default),
       True = "after" (CuDNN compatible).
-
   Call arguments:
     inputs: A 3D tensor.
     mask: Binary tensor of shape `(samples, timesteps)` indicating whether
@@ -2046,7 +2006,6 @@ class GRU(RNN):
 @keras_export(v1=['keras.layers.LSTMCell'])
 class LSTMCell(DropoutRNNCellMixin, Layer):
   """Cell class for the LSTM layer.
-
   Arguments:
     units: Positive integer, dimensionality of the output space.
     activation: Activation function to use.
@@ -2092,7 +2051,6 @@ class LSTMCell(DropoutRNNCellMixin, Layer):
       batch them into fewer, larger operations. These modes will
       have different performance profiles on different hardware and
       for different applications.
-
   Call arguments:
     inputs: A 2D tensor.
     states: List of state tensors corresponding to the previous timestep.
@@ -2321,26 +2279,19 @@ class LSTMCell(DropoutRNNCellMixin, Layer):
 @keras_export('keras.experimental.PeepholeLSTMCell')
 class PeepholeLSTMCell(LSTMCell):
   """Equivalent to LSTMCell class but adds peephole connections.
-
   Peephole connections allow the gates to utilize the previous internal state as
   well as the previous hidden state (which is what LSTMCell is limited to).
   This allows PeepholeLSTMCell to better learn precise timings over LSTMCell.
-
   From [Gers et al.](http://www.jmlr.org/papers/volume3/gers02a/gers02a.pdf):
-
   "We find that LSTM augmented by 'peephole connections' from its internal
   cells to its multiplicative gates can learn the fine distinction between
   sequences of spikes spaced either 50 or 49 time steps apart without the help
   of any short training exemplars."
-
   The peephole implementation is based on:
-
   [Long short-term memory recurrent neural network architectures for
    large scale acoustic modeling.
   ](https://research.google.com/pubs/archive/43905.pdf)
-
   Example:
-
   ```python
   # Create 2 PeepholeLSTMCells
   peephole_lstm_cells = [PeepholeLSTMCell(size) for size in [128, 256]]
@@ -2399,10 +2350,8 @@ class PeepholeLSTMCell(LSTMCell):
 @keras_export(v1=['keras.layers.LSTM'])
 class LSTM(RNN):
   """Long Short-Term Memory layer - Hochreiter 1997.
-
    Note that this cell is not optimized for performance on GPU. Please use
   `tf.compat.v1.keras.layers.CuDNNLSTM` for better performance on GPU.
-
   Arguments:
     units: Positive integer, dimensionality of the output space.
     activation: Activation function to use.
@@ -2474,7 +2423,6 @@ class LSTM(RNN):
       RNN calculation. However, most TensorFlow data is batch-major, so by
       default this function accepts input and emits output in batch-major
       form.
-
   Call arguments:
     inputs: A 3D tensor.
     mask: Binary tensor of shape `(samples, timesteps)` indicating whether
@@ -2684,13 +2632,11 @@ def _generate_dropout_mask(ones, rate, training=None, count=1):
 
 def _standardize_args(inputs, initial_state, constants, num_constants):
   """Standardizes `__call__` to a single list of tensor inputs.
-
   When running a model loaded from a file, the input tensors
   `initial_state` and `constants` can be passed to `RNN.__call__()` as part
   of `inputs` instead of by the dedicated keyword arguments. This method
   makes sure the arguments are separated and that `initial_state` and
   `constants` are lists of tensors (or None).
-
   Arguments:
     inputs: Tensor or list/tuple of tensors. which may include constants
       and initial states. In that case `num_constant` must be specified.
@@ -2698,7 +2644,6 @@ def _standardize_args(inputs, initial_state, constants, num_constants):
     constants: Tensor or list of tensors or None, constant tensors.
     num_constants: Expected number of constants (if constants are passed as
       part of the `inputs` list.
-
   Returns:
     inputs: Single tensor or tuple of tensors.
     initial_state: List of tensors or None.
