@@ -15,7 +15,7 @@
 # pylint: disable=protected-access
 
 '''
-CoRL: modified SimpleRNNCell
+AMR-Changes: modified SimpleRNNCell
 Original Authors:
 Martín Abadi, Ashish Agarwal, Paul Barham, Eugene Brevdo,
 Zhifeng Chen, Craig Citro, Greg S. Corrado, Andy Davis,
