@@ -22,8 +22,12 @@ python tf_agents/agents/sac/examples/v1/train_eval.py \
   --alsologtostderr
 ```
 
-CoRL: This file is a modified version from TF-agents gibson_sim2real branch:
+AMR-Changes: This file is a modified version from TF-agents gibson_sim2real branch:
 agents/tf_agents/agents/sac/examples/v1/train_eval_rnn.py
+to work with reinforce agent and use AMR-regularization
+
+Original Authors:
+S. Guadarrama, A. Korattikara, O. Ramirez, P. Castro, E. Holly, S. Fishman, K. Wang, E. Gonina, N. Wu, E. Kokiopoulou, L. Sbaiz, J. Smith, G. Bart ́ok, J. Berent, C. Harris, V. Vanhoucke, and E. Brevdo.   TF-Agents:  A library for reinforcement learning in tensorflow,  2018.   URL https://github.com/tensorflow/agents
 """
 
 from __future__ import absolute_import

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# CoRL: This file is modified from TF-agents gibson_sim2real branch:
+# AMR-Changes: This file is modified from TF-agents gibson_sim2real branch:
 # agents/tf_agents/agents/sac/examples/v1/train_single_env.sh
 
 gpu_c="0"
@@ -41,8 +41,8 @@ python -u train_eval_rnn_m_reinforce.py \
     --num_eval_episodes 10 \
     --actor_rnn_size 100 \
     --random_init_m 2 \
-    --seed 2 \
-    --env_mode 'gui' \
+    --seed 0 \
+    --env_mode 'headless' \
     --eval_interval 50 \
     --AMR_regularizer 0 \
     --gpu_c $gpu_c \
