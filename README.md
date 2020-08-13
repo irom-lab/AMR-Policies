@@ -1,9 +1,11 @@
+The following instructions are for installing a modified iGibson for AMR-Policies and running the third example seen in "Learning to Actively Reduce Memory Requirements for Robot Control Tasks" by Meghan Booker and Anirudha Majumdar.
+
 ### Setup
 Installation instructions are a combination from http://svl.stanford.edu/igibson/docs/ and https://github.com/StanfordVL/GibsonSim2RealChallenge. Verified on Ubuntu 18.04.
 - Make conda environment
 ```
-  conda create -n igibson python=3.6 anaconda
-  conda activate igibson
+  conda create -n igibson-amr python=3.6 anaconda
+  conda activate igibson-amr
 ```
 - Install Cuda 10.0
   - Extra install information if needed https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html
@@ -19,14 +21,13 @@ Installation instructions are a combination from http://svl.stanford.edu/igibson
   pip install tensorflow-gpu==1.15.0
 ```
 ### Gibson Install
-- Download and install iGibson
+- Install iGibson
 ```
-git clone https://github.com/StanfordVL/iGibson --recursive
-cd iGibson
-source activate igibson
+cd AMR-Policies
+source activate igibson-amr
 pip install -e .
 ```
-- Add folders "assets" and "dataset" to `iGibson/gibson2`
+- Add assets and datasets to folders "assets" and "dataset" in `AMR-Policies/gibson2`
   - Assets download: http://svl.stanford.edu/igibson/docs/installation.html
   - Need Rs + Placida scene downloaded for dataset folder. Fill out form https://docs.google.com/forms/d/e/1FAIpQLScWlx5Z1DM1M-wTSXaa6zV8lTFkPmTHW1LqMsoCBDWsTDjBkQ/viewform
   - Placida is found in "Interactive Gibson dataset, 10 scenes, with replaced objects and textures"
@@ -38,31 +39,31 @@ pip install -e .
   python env_example.py
   ```
 - Install tf-agents gibson-sim2real branch
-  - Add "agents" folder to iGibson/gibson2
-  - Copy repo downloaded form https://github.com/StanfordVL/agents/tree/gibson_sim2real to agents folder
+  - Navigate to "agents" folder in `AMR-Policies/gibson2`
   - Install
   ```
-  cd iGibson/gibson2/agents
+  cd AMR-Policies/gibson2/agents
   pip install -e .
   ```
-- Add AMR related files (Pre-configured repo too large to upload)
-  - turtlebot_AMR.yaml to `iGibson/examples/configs`
-  - actor_distribution_rnn_m_network.py to `iGibson/gibson2/agents/tf_agents/networks`
+- The following files were added to iGibson and tf-agents
+  - turtlebot_AMR.yaml to `AMR-Policies/examples/configs`
+  - actor_distribution_rnn_m_network.py to `AMR-Policies/gibson2/agents/tf_agents/networks`
     - Note: a modified version of TF-agent's actor_distribution_rnn_network.py [[1]](#1)
-  - rnn_encoding_network.py to `iGibson/gibson2/agents/tf_agents/networks`
+  - rnn_encoding_network.py to `AMR-Policies/gibson2/agents/tf_agents/networks`
     - Note: a modified version of TF-agent's lstm_encoding_network.py [[1]](#1)
-  - test1.npy, test2_rot.npy, test2_x.npy, test2_y.npy to `iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1`
-  - train_eval_rnn_m_reinforce.py and train_shell.sh to `iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1`
-    - Note: modified versions of train_eval_rnn.py and train_single_env.sh found in `iGibson/gibson2/agents/tf_agents/agents/sac/examples/v1` [[1]](#1)
-- Replace files with modified AMR versions
-  - reinforce_agent.py at `iGibson/gibson2/agents/tf_agents/agents/reinforce` [[1]](#1)
-  - suite_gibson.py at `iGibson/gibson2/agents/tf_agents/environments` [[1]](#1)
-  - locomotor_env.py at `iGibson/gibson2/envs` [[2]](#2)
+  - test1.npy, test2_rot.npy, test2_x.npy, test2_y.npy to `AMR-Policies/gibson2/agents/tf_agents/agents/reinforce/examples/v1`
+  - train_eval_rnn_m_reinforce.py and train_shell.sh to `AMR-Policies/gibson2/agents/tf_agents/agents/reinforce/examples/v1`
+    - Note: modified versions of train_eval_rnn.py and train_single_env.sh found in `gibson2/agents/tf_agents/agents/sac/examples/v1` [[1]](#1)
+- The following files are modified AMR versions
+  - reinforce_agent.py at `AMR-Policies/gibson2/agents/tf_agents/agents/reinforce` [[1]](#1)
+  - suite_gibson.py at `AMR-Policies/gibson2/agents/tf_agents/environments` [[1]](#1)
+  - locomotor_env.py at `AMR-Policies/gibson2/envs` [[2]](#2)
+- Replace the following file with modified:
   - recurrent.py at `tensorflow_core/python/keras/layers` [[3]](#3)
 
 ### Training
 ```
-cd iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1
+cd AMR-Policies/gibson2/agents/tf_agents/agents/reinforce/examples/v1
 ./train_shell.sh
 ```
 
@@ -71,7 +72,7 @@ cd iGibson/gibson2/agents/tf_agents/agents/reinforce/examples/v1
     - headless to gui
     - Add flag `--eval-only True`
 - To see previous checkpoint policies, change checkpoint header in `test/train/checkpoint` and `test/train/policy/checkpoint`
-- flag `--random_init_m 2`, 2: training, 3: test, 4: test with enlarged set of initial conditions
+- flag `--random_init_m 2`, 2: training, 3: test, 4: test with enlarged set of initial conditions with testing data in `AMR-Policies/gibson2/agents/tf_agents/agents/reinforce/examples/v1`
 
 ## References
 <a id="1">[1]</a> 
