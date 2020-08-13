@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2020 AMR Authors.
+# # Copyright 2018 The TF-Agents Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
 # limitations under the License.
 
 """Sample Keras actor network  with LSTM cells that generates distributions.
-
 AMR-Changes: This file is modified from TF-agents gibson_sim2real branch:
 agents/tf_agents/networks/actor_distribution_rnn_network.py
 to call on rnn_encoding_network instead of lstm_encoding_network
