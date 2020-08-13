@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2018 The TF-Agents Authors.
+# Copyright 2020 AMR Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,11 @@ from gibson2.data_utils.utils import get_train_models
 from gibson2.envs.locomotor_env import NavigateEnv, NavigateRandomEnv, NavigateRandomEnvSim2Real, NavigateRandomInitEnvSim2Real
 import gibson2
 
-# CoRL: added gibson_m
+'''
+AMR-Changes: added gibson_m
+Original authors:
+S. Guadarrama, A. Korattikara, O. Ramirez, P. Castro, E. Holly, S. Fishman, K. Wang, E. Gonina, N. Wu, E. Kokiopoulou, L. Sbaiz, J. Smith, G. Bart ́ok, J. Berent, C. Harris, V. Vanhoucke, and E. Brevdo.   TF-Agents:  A library for reinforcement learning in tensorflow,  2018.   URL https://github.com/tensorflow/agents
+'''
 
 @gin.configurable
 def load(config_file,
