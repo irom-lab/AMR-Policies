@@ -38,7 +38,7 @@ pip install -e .
   cd examples/demo
   python env_example.py
   ```
-- Install tf-agents gibson-sim2real branch
+- Install tf-agents gibson-sim2real branch (https://github.com/StanfordVL/agents/tree/gibson_sim2real)
   - Navigate to "agents" folder in `AMR-Policies/gibson2`
   - Install
   ```
